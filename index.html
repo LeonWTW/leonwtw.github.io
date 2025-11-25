@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leon Wong | CS & Math</title>
+    <style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            --color-bg: #0f172a;
+            --color-card: rgba(15, 23, 42, 0.75);
+            --color-text: #e5e7eb;
+            --color-text-muted: #9ca3af;
+            --color-matrix: #22c55e;
+            --color-matrix-glow: #4ade80;
+            --font-mono: "Courier New", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            --font-sans: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            --radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--color-text);
+            background-color: var(--color-bg);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- MATRIX BACKGROUND --- */
+        .matrix-bg {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            border: none;
+            pointer-events: none;
+        }
+
+        /* .matrix-overlay {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: rgba(0, 0, 0, 0);
+            /* Darkened slightly for better contrast 
+            backdrop-filter: none;
+            pointer-events: none;
+        } */
+
+        /* --- LAYOUT --- */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        section {
+            margin-bottom: 3rem;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1,
+        h2,
+        h3 {
+            font-family: var(--font-mono);
+            color: #fff;
+            letter-spacing: -0.02em;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--color-matrix);
+            padding-left: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            color: var(--color-matrix-glow);
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--color-text-muted);
+        }
+
+        a {
+            color: var(--color-matrix);
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        a:hover {
+            color: var(--color-matrix-glow);
+            text-decoration: underline;
+        }
+
+        /* --- CARDS --- */
+        .card {
+            background: var(--color-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(15px);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--color-text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--color-matrix);
+            border-radius: 50px;
+            color: var(--color-matrix);
+            font-family: var(--font-mono);
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .btn:hover {
+            background: var(--color-matrix);
+            color: #000;
+            box-shadow: 0 0 15px var(--color-matrix);
+            text-decoration: none;
+        }
+
+        /* --- PROJECT LIST --- */
+        .project-card {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .project-card:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        .tags {
+            font-size: 0.8rem;
+            font-family: var(--font-mono);
+            color: var(--color-text-muted);
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        /* --- SKILLS & CONTACT --- */
+        .skills-list {
+            list-style: none;
+        }
+
+        .skills-list li {
+            margin-bottom: 1rem;
+        }
+
+        .skill-category {
+            color: #fff;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            opacity: 0.7;
+        }
+
+        /* --- EDITOR PANEL --- */
+        .edit-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: var(--color-matrix);
+            color: #000;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s;
+        }
+
+        .edit-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .editor-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            background: #1e293b;
+            z-index: 101;
+            padding: 2rem;
+            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.5);
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            overflow-y: auto;
+            border-left: 2px solid var(--color-matrix);
+        }
+
+        .editor-panel.open {
+            transform: translateX(0);
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .editor-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--color-matrix);
+        }
+
+        .editor-form input,
+        .editor-form textarea {
+            width: 100%;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: #fff;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-family: var(--font-sans);
+        }
+
+        .editor-form textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-save {
+            flex: 1;
+            background: var(--color-matrix);
+            color: #000;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-close {
+            background: transparent;
+            color: #fff;
+            border: 1px solid #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* Mobile tweaks */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <iframe class="matrix-bg" id="matrix-frame"></iframe>
+    <div class="matrix-overlay"></div>
+
+    <main class="container">
+        <section class="hero">
+            <h1 id="hero-name">Leon Wong</h1>
+            <p class="hero-subtitle" id="hero-subtitle">Computer Science Student & Math Minor</p>
+            <div class="btn-group">
+                <a href="https://github.com/LeonWTW" target="_blank"
+                    class="btn">GitHub</a>
+                <a href="https://www.linkedin.com/in/leonwongwtw"
+                    target="_blank" class="btn">LinkedIn</a>
+                <a href="Leon_Wong_Resume.pdf" target="_blank" class="btn">Resume</a>
+
+            </div>
+        </section>
+
+        <section id="about" class="card">
+            <h2>About Me</h2>
+            <div id="about-content">
+                <p>I'm a Computer Science student at the University of Oregon with a Mathematics minor and a very
+                    hands-on way of learning. I like working close to the system with C, Linux, and data structures, but
+                    I also enjoy building data-driven web applications using Python, Flask, and REST APIs.</p>
+                <p>I’m especially interested in products that actually make people’s lives easier, instead of just
+                    adding more noise. Recently I’ve been drawn to ideas around “elderly tech” — tools that support
+                    older adults and caregivers in simple, practical ways. I like taking messy problems, breaking them
+                    down into small, testable steps, and turning them into something real that people can use.</p>
+            </div>
+        </section>
+
+        <section id="projects" class="card">
+            <h2>Projects</h2>
+            <div id="projects-list">
+                <div class="project-card">
+                    <h3>Full-Stack REST API Web Service</h3>
+                    <p>A RESTful web service that exposes CRUD APIs over structured data, built with Flask and Docker.
+                        Uses MongoDB for persistent storage, environment-based configuration, and is tested with Postman
+                        collections.</p>
+                    <span class="tags">Tags: Python · Flask · Docker · MongoDB · REST APIs</span>
+                </div>
+
+                <div class="project-card">
+                    <h3>TradeLab – Trading Strategy Backtester</h3>
+                    <p>A Python-based backtesting tool for evaluating stock trading strategies on historical data.
+                        Fetches price data, applies modular strategy components, and visualizes returns and drawdowns
+                        for comparison.</p>
+                    <span class="tags">Tags: Python · Pandas · NumPy · Matplotlib · CLI</span>
+                </div>
+
+                <div class="project-card">
+                    <h3>Brevet Time Calculator</h3>
+                    <p>A web app that computes ACP brevet control times based on cycling distances and rules. Built with
+                        Flask, tested with unit tests, and containerized with Docker for easy deployment.</p>
+                    <span class="tags">Tags: Python · Flask · Docker · Algorithms</span>
+                </div>
+
+                <div class="project-card">
+                    <h3>Data Structures in C</h3>
+                    <p>A collection of C data structure implementations focusing on dynamic arrays, stacks, queues, and
+                        heaps. Emphasizes memory management with malloc/free, pointer arithmetic, and performance
+                        considerations.</p>
+                    <span class="tags">Tags: C · Data Structures · Memory Management · Performance</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="card">
+            <h2>Skills</h2>
+            <ul class="skills-list" id="skills-list">
+                <li>
+                    <span class="skill-category">Languages:</span>
+                    Python, C, C++, Java, SQL, HTML, CSS, JavaScript, TypeScript, Bash
+                </li>
+                <li>
+                    <span class="skill-category">Frameworks & Tools:</span>
+                    Flask, Docker, Linux, AWS, REST APIs, Git, GitHub, Makefile, Shell scripting, Conda, virtualenv,
+                    Jupyter Notebook, Postman
+                </li>
+                <li>
+                    <span class="skill-category">Data & Analytics:</span>
+                    Pandas, NumPy, SQL, Scikit-learn, PyTorch, MongoDB, Matplotlib, Seaborn, Excel
+                </li>
+                <li>
+                    <span class="skill-category">Software Concepts:</span>
+                    Object-Oriented Programming (OOP), Design Patterns, Modular Programming, Algorithm Design, Data
+                    Structures, Time & Space Complexity, Memory Management, Concurrency, Testing & Debugging
+                </li>
+            </ul>
+        </section>
+
+        <section id="contact" class="card">
+            <h2>Contact</h2>
+            <div id="contact-content">
+                <p>Email: <a href="mailto:leontatwing@gmail.com" id="contact-email-link">leontatwing@gmail.com</a></p>
+                <p>GitHub: <a href="https://github.com/LeonWTW"
+                        target="_blank">github.com/LeonWTW</a></p>
+                <p>LinkedIn: <a
+                        href="https://www.linkedin.com/in/leonwongwtw"
+                        target="_blank">linkedin.com/in/leonwongwtw</a></p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        © 2025 Leon Wong
+    </footer>
+
+    <!--
+    <button class="edit-btn" onclick="toggleEditor()">✏ Edit Content</button>
+
+    <aside class="editor-panel" id="editorPanel">
+        <div class="editor-header">
+            <h3>Site Editor</h3>
+            <button class="btn-close" onclick="toggleEditor()">✕</button>
+        </div>
+        <div class="editor-form">
+            <label>Hero Name</label>
+            <input type="text" id="edit-name" value="Leon Wong">
+
+            <label>Subtitle</label>
+            <input type="text" id="edit-subtitle" value="Computer Science Student & Math Minor">
+
+            <label>About Me (Paragraphs)</label>
+            <textarea id="edit-about"></textarea>
+
+            <label>Contact Email</label>
+            <input type="text" id="edit-email" value="leontatwing@gmail.com">
+
+            <div class="editor-actions">
+                <button class="btn-save" onclick="applyChanges()">Apply Changes</button>
+            </div>
+
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #334155;">
+            <p style="font-size: 0.8rem; color: #94a3b8;">Note: This editor updates the page live for testing.
+                Refreshing the page will reset content.</p>
+        </div>
+    </aside>
+    -->
+    <script>
+        const matrixConfig = "eyJjb250cm9sbGVycyI6e30sImZvbGRlcnMiOnsiUmFpbiI6eyJjb250cm9sbGVycyI6eyJNYXRyaXggU3BlZWQiOjI0LCJUcmFpbCBMZW5ndGgiOjAuOSwiRHJvcCBDb3VudC9Db2x1bW4iOjIsIkluaXRpYWwgQW5pbWF0aW9uIjoiMSJ9LCJmb2xkZXJzIjp7fX0sIkNvbG9yIjp7ImNvbnRyb2xsZXJzIjp7IkNvbG9yIE1vZGUiOiIwIiwiTWF0cml4IENvbG9yIjoiIzAwZmYwMCIsIkNvbG9yIEFuaW1hdGlvbiBTcGVlZCI6MCwiSGlnaGxpZ2h0IEZpcnN0IENoYXJhY3RlciI6dHJ1ZX0sImZvbGRlcnMiOnt9fSwiQ2hhcmFjdGVycyI6eyJjb250cm9sbGVycyI6eyJDaGFyIHNldCI6IjQiLCJDdXN0b20gQ2hhciBTZXQiOiIwMTIzNDU2Nzg5QUJDREVGIn0sImZvbGRlcnMiOnt9fSwiRm9udCI6eyJjb250cm9sbGVycyI6eyJGb250IFNpemUiOjE0LCJGb250IjoiMyIsIkN1c3RvbSBGb250IjoibW9ub3NwYWNlIn0sImZvbGRlcnMiOnt9fSwiQXVkaW8gKG5vdCBhdmFpbGFibGUgaW4gd2ViIHZlcnNpb24pIjp7ImNvbnRyb2xsZXJzIjp7fSwiZm9sZGVycyI6e319LCJMb2dvIjp7ImNvbnRyb2xsZXJzIjp7IkxvZ28iOiIwIiwiQ3VzdG9tIExvZ28gVVJMIChTVkcvUE5HKSI6IiIsIlByZXNlcnZlIExvZ28gQ29sb3IiOmZhbHNlLCJTY2FsZSI6MX0sImZvbGRlcnMiOnsiUG9zaXRpb24iOnsiY29udHJvbGxlcnMiOnsiWCI6MCwiWSI6MH0sImZvbGRlcnMiOnt9fX19LCJDbG9jayI6eyJjb250cm9sbGVycyI6eyJDbG9jayI6IjAiLCIyNCBIb3VyIGZvcm1hdCI6dHJ1ZSwiRGF5LWxpZ2h0IFNhdmluZyI6MCwiU2NhbGUiOjF9LCJmb2xkZXJzIjp7IlBvc2l0aW9uIjp7ImNvbnRyb2xsZXJzIjp7IlgiOjAsIlkiOjB9LCJmb2xkZXJzIjp7fX19fSwiRGF5Ijp7ImNvbnRyb2xsZXJzIjp7IkRheSI6IjAiLCJBbGwgQ0FQUyI6ZmFsc2UsIlZlcnRpY2FsIE9yaWVudGF0aW9uIjpmYWxzZSwiU2NhbGUiOjF9LCJmb2xkZXJzIjp7IlBvc2l0aW9uIjp7ImNvbnRyb2xsZXJzIjp7IlgiOjAsIlkiOjB9LCJmb2xkZXJzIjp7fX19fSwiRGF0ZSI6eyJjb250cm9sbGVycyI6eyJEYXRlIjoiMCIsIlllYXIiOiIyIiwiT3JkZXIiOiIwIiwiTW9udGggTmFtZSI6ZmFsc2UsIkFsbCBDQVBTIjpmYWxzZSwiRGVsaW1pdGVyIjoiMCIsIlN0eWxlIjoiMCIsIlNjYWxlIjoxfSwiZm9sZGVycyI6eyJQb3NpdGlvbiI6eyJjb250cm9sbGVycyI6eyJYIjowLCJZIjowfSwiZm9sZGVycyI6e319fX0sIk1lc3NhZ2UiOnsiY29udHJvbGxlcnMiOnsiTWVzc2FnZSI6ZmFsc2UsIk1lc3NhZ2UgVGV4dCI6IlRIRSBNQVRSSVgiLCJTY2FsZSI6MX0sImZvbGRlcnMiOnsiUG9zaXRpb24iOnsiY29udHJvbGxlcnMiOnsiWCI6MCwiWSI6MH0sImZvbGRlcnMiOnt9fX19LCJPdGhlciI6eyJjb250cm9sbGVycyI6eyJDb2RlcyAoQ29tbWEgc2VwYXJhdGVkKSI6IklQLkFGLFRIRSBNQVRSSVgifSwiZm9sZGVycyI6e319fX0=";
+        const cleanUrl = "https://leonwtw.github.io/NeoMatrix/?preset=" + encodeURIComponent(matrixConfig);
+        document.querySelector('.matrix-bg').src = cleanUrl;
+
+        // --- EDITOR LOGIC ---
+
+        const editorPanel = document.getElementById('editorPanel');
+        const domElements = {
+            name: document.getElementById('hero-name'),
+            subtitle: document.getElementById('hero-subtitle'),
+            about: document.getElementById('about-content'),
+            emailLink: document.getElementById('contact-email-link')
+        };
+
+        const inputs = {
+            name: document.getElementById('edit-name'),
+            subtitle: document.getElementById('edit-subtitle'),
+            about: document.getElementById('edit-about'),
+            email: document.getElementById('edit-email')
+        };
+
+        function toggleEditor() {
+            const isOpen = editorPanel.classList.contains('open');
+            if (!isOpen) {
+                // Populate inputs with current DOM content when opening
+                inputs.name.value = domElements.name.innerText;
+                inputs.subtitle.value = domElements.subtitle.innerText;
+
+                // Convert HTML paragraphs back to text with newlines for editing
+                let aboutText = domElements.about.innerHTML;
+                // Simple regex to replace <p> tags with newlines for the textarea
+                aboutText = aboutText.replace(/<p>/g, '').replace(/<\/p>/g, '\n\n').trim();
+                inputs.about.value = aboutText;
+
+                inputs.email.value = domElements.emailLink.innerText;
+            }
+            editorPanel.classList.toggle('open');
+        }
+
+        function applyChanges() {
+            // Update Hero
+            domElements.name.innerText = inputs.name.value;
+            domElements.subtitle.innerText = inputs.subtitle.value;
+
+            // Update About Me (Convert newlines back to <p> tags)
+            const rawAbout = inputs.about.value.split('\n\n');
+            const htmlAbout = rawAbout.map(para => para.trim() ? `<p>${para.trim()}</p>` : '').join('');
+            domElements.about.innerHTML = htmlAbout;
+
+            // Update Email
+            domElements.emailLink.innerText = inputs.email.value;
+            domElements.emailLink.href = `mailto:${inputs.email.value}`;
+
+            // Visual Feedback
+            const saveBtn = document.querySelector('.btn-save');
+            const originalText = saveBtn.innerText;
+            saveBtn.innerText = "Saved!";
+            saveBtn.style.background = "#fff";
+            setTimeout(() => {
+                saveBtn.innerText = originalText;
+                saveBtn.style.background = "";
+            }, 1000);
+        }
+    </script>
+</body>
+
+</html> :::
