@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,28 +32,16 @@
             overflow-x: hidden;
         }
 
-        /* --- MATRIX BACKGROUND --- */
-        .matrix-bg {
+        /* --- MATRIX CANVAS BACKGROUND --- */
+        #matrix-canvas {
             position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-            border: none;
-            pointer-events: none;
-        }
-
-        /* .matrix-overlay {
-            position: fixed;
-            inset: 0;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
-            background: rgba(0, 0, 0, 0);
-            /* Darkened slightly for better contrast 
-            backdrop-filter: none;
             pointer-events: none;
-        } */
+        }
 
         /* --- LAYOUT --- */
         .container {
@@ -71,9 +57,7 @@
         }
 
         /* --- TYPOGRAPHY --- */
-        h1,
-        h2,
-        h3 {
+        h1, h2, h3 {
             font-family: var(--font-mono);
             color: #fff;
             letter-spacing: -0.02em;
@@ -189,217 +173,109 @@
             display: block;
         }
 
-        /* --- SKILLS & CONTACT --- */
+        /* --- SKILLS LIST --- */
         .skills-list {
             list-style: none;
+            padding-left: 0;
         }
 
         .skills-list li {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .skills-list li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--color-matrix);
+            font-family: var(--font-mono);
         }
 
         .skill-category {
-            color: #fff;
             font-weight: bold;
-            margin-right: 0.5rem;
+            color: var(--color-matrix-glow);
+            font-family: var(--font-mono);
+            display: block;
+            margin-bottom: 0.25rem;
         }
 
         /* --- FOOTER --- */
         footer {
             text-align: center;
-            padding: 2rem;
-            font-size: 0.9rem;
+            padding: 2rem 1.5rem;
             color: var(--color-text-muted);
-            opacity: 0.7;
-        }
-
-        /* --- EDITOR PANEL --- */
-        .edit-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 100;
-            background: var(--color-matrix);
-            color: #000;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 50px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            transition: transform 0.2s;
-        }
-
-        .edit-btn:hover {
-            transform: scale(1.05);
-        }
-
-        .editor-panel {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 100%;
-            max-width: 400px;
-            height: 100vh;
-            background: #1e293b;
-            z-index: 101;
-            padding: 2rem;
-            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.5);
-            transform: translateX(100%);
-            transition: transform 0.3s ease-in-out;
-            overflow-y: auto;
-            border-left: 2px solid var(--color-matrix);
-        }
-
-        .editor-panel.open {
-            transform: translateX(0);
-        }
-
-        .editor-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .editor-form label {
-            display: block;
-            margin-bottom: 0.5rem;
             font-family: var(--font-mono);
             font-size: 0.9rem;
-            color: var(--color-matrix);
-        }
-
-        .editor-form input,
-        .editor-form textarea {
-            width: 100%;
-            background: #0f172a;
-            border: 1px solid #334155;
-            color: #fff;
-            padding: 0.75rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            font-family: var(--font-sans);
-        }
-
-        .editor-form textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .editor-actions {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .btn-save {
-            flex: 1;
-            background: var(--color-matrix);
-            color: #000;
-            border: none;
-            padding: 1rem;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .btn-close {
-            background: transparent;
-            color: #fff;
-            border: 1px solid #fff;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        /* Mobile tweaks */
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 1.8rem;
-            }
-
-            .container {
-                padding: 1rem;
-            }
-
-            .card {
-                padding: 1.5rem;
-            }
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
 
 <body>
-
-    <iframe class="matrix-bg" id="matrix-frame"></iframe>
-    <div class="matrix-overlay"></div>
-
+    <!-- Matrix Canvas Background -->
+    <canvas id="matrix-canvas"></canvas>
+    
     <main class="container">
         <section class="hero">
-            <h1 id="hero-name">Leon Wong</h1>
-            <p class="hero-subtitle" id="hero-subtitle">Computer Science Student & Math Minor</p>
+            <h1>Leon Wong</h1>
+            <p class="hero-subtitle">Computer Science Student & Math Minor</p>
             <div class="btn-group">
-                <a href="https://github.com/LeonWTW" target="_blank"
-                    class="btn">GitHub</a>
-                <a href="https://www.linkedin.com/in/leonwongwtw"
-                    target="_blank" class="btn">LinkedIn</a>
+                <a href="https://github.com/LeonWTW" target="_blank" class="btn">GitHub</a>
+                <a href="https://www.linkedin.com/in/leonwongwtw" target="_blank" class="btn">LinkedIn</a>
                 <a href="Leon_Wong_Resume.pdf" target="_blank" class="btn">Resume</a>
-
             </div>
         </section>
 
         <section id="about" class="card">
             <h2>About Me</h2>
-            <div id="about-content">
-                <p>I'm a Computer Science student at the University of Oregon with a Mathematics minor and a very
-                    hands-on way of learning. I like working close to the system with C, Linux, and data structures, but
-                    I also enjoy building data-driven web applications using Python, Flask, and REST APIs.</p>
-                <p>I’m especially interested in products that actually make people’s lives easier, instead of just
-                    adding more noise. Recently I’ve been drawn to ideas around “elderly tech” — tools that support
-                    older adults and caregivers in simple, practical ways. I like taking messy problems, breaking them
-                    down into small, testable steps, and turning them into something real that people can use.</p>
-            </div>
+            <p>I'm a Computer Science student at the University of Oregon with a Mathematics minor and a very
+                hands-on way of learning. I like working close to the system with C, Linux, and data structures, but
+                I also enjoy building data-driven web applications using Python, Flask, and REST APIs.</p>
+            <p>I'm especially interested in products that actually make people's lives easier, instead of just
+                adding more noise. Recently I've been drawn to ideas around "elderly tech" — tools that support
+                older adults and caregivers in simple, practical ways. I like taking messy problems, breaking them
+                down into small, testable steps, and turning them into something real that people can use.</p>
         </section>
 
         <section id="projects" class="card">
             <h2>Projects</h2>
-            <div id="projects-list">
-                <div class="project-card">
-                    <h3>Full-Stack REST API Web Service</h3>
-                    <p>A RESTful web service that exposes CRUD APIs over structured data, built with Flask and Docker.
-                        Uses MongoDB for persistent storage, environment-based configuration, and is tested with Postman
-                        collections.</p>
-                    <span class="tags">Tags: Python · Flask · Docker · MongoDB · REST APIs</span>
-                </div>
+            <div class="project-card">
+                <h3>Full-Stack REST API Web Service</h3>
+                <p>A RESTful web service that exposes CRUD APIs over structured data, built with Flask and Docker.
+                    Uses MongoDB for persistent storage, environment-based configuration, and is tested with Postman
+                    collections.</p>
+                <span class="tags">Tags: Python · Flask · Docker · MongoDB · REST APIs</span>
+            </div>
 
-                <div class="project-card">
-                    <h3>TradeLab – Trading Strategy Backtester</h3>
-                    <p>A Python-based backtesting tool for evaluating stock trading strategies on historical data.
-                        Fetches price data, applies modular strategy components, and visualizes returns and drawdowns
-                        for comparison.</p>
-                    <span class="tags">Tags: Python · Pandas · NumPy · Matplotlib · CLI</span>
-                </div>
+            <div class="project-card">
+                <h3>TradeLab – Trading Strategy Backtester</h3>
+                <p>A Python-based backtesting tool for evaluating stock trading strategies on historical data.
+                    Fetches price data, applies modular strategy components, and visualizes returns and drawdowns
+                    for comparison.</p>
+                <span class="tags">Tags: Python · Pandas · NumPy · Matplotlib · CLI</span>
+            </div>
 
-                <div class="project-card">
-                    <h3>Brevet Time Calculator</h3>
-                    <p>A web app that computes ACP brevet control times based on cycling distances and rules. Built with
-                        Flask, tested with unit tests, and containerized with Docker for easy deployment.</p>
-                    <span class="tags">Tags: Python · Flask · Docker · Algorithms</span>
-                </div>
+            <div class="project-card">
+                <h3>Brevet Time Calculator</h3>
+                <p>A web app that computes ACP brevet control times based on cycling distances and rules. Built with
+                    Flask, tested with unit tests, and containerized with Docker for easy deployment.</p>
+                <span class="tags">Tags: Python · Flask · Docker · Algorithms</span>
+            </div>
 
-                <div class="project-card">
-                    <h3>Data Structures in C</h3>
-                    <p>A collection of C data structure implementations focusing on dynamic arrays, stacks, queues, and
-                        heaps. Emphasizes memory management with malloc/free, pointer arithmetic, and performance
-                        considerations.</p>
-                    <span class="tags">Tags: C · Data Structures · Memory Management · Performance</span>
-                </div>
+            <div class="project-card">
+                <h3>Data Structures in C</h3>
+                <p>A collection of C data structure implementations focusing on dynamic arrays, stacks, queues, and
+                    heaps. Emphasizes memory management with malloc/free, pointer arithmetic, and performance
+                    considerations.</p>
+                <span class="tags">Tags: C · Data Structures · Memory Management · Performance</span>
             </div>
         </section>
 
         <section id="skills" class="card">
             <h2>Skills</h2>
-            <ul class="skills-list" id="skills-list">
+            <ul class="skills-list">
                 <li>
                     <span class="skill-category">Languages:</span>
                     Python, C, C++, Java, SQL, HTML, CSS, JavaScript, TypeScript, Bash
@@ -423,14 +299,9 @@
 
         <section id="contact" class="card">
             <h2>Contact</h2>
-            <div id="contact-content">
-                <p>Email: <a href="mailto:leontatwing@gmail.com" id="contact-email-link">leontatwing@gmail.com</a></p>
-                <p>GitHub: <a href="https://github.com/LeonWTW"
-                        target="_blank">github.com/LeonWTW</a></p>
-                <p>LinkedIn: <a
-                        href="https://www.linkedin.com/in/leonwongwtw"
-                        target="_blank">linkedin.com/in/leonwongwtw</a></p>
-            </div>
+            <p>Email: <a href="mailto:leontatwing@gmail.com">leontatwing@gmail.com</a></p>
+            <p>GitHub: <a href="https://github.com/LeonWTW" target="_blank">github.com/LeonWTW</a></p>
+            <p>LinkedIn: <a href="https://www.linkedin.com/in/leonwongwtw" target="_blank">linkedin.com/in/leonwongwtw</a></p>
         </section>
     </main>
 
@@ -438,102 +309,200 @@
         © 2025 Leon Wong
     </footer>
 
-    <!--
-    <button class="edit-btn" onclick="toggleEditor()">✏ Edit Content</button>
-
-    <aside class="editor-panel" id="editorPanel">
-        <div class="editor-header">
-            <h3>Site Editor</h3>
-            <button class="btn-close" onclick="toggleEditor()">✕</button>
-        </div>
-        <div class="editor-form">
-            <label>Hero Name</label>
-            <input type="text" id="edit-name" value="Leon Wong">
-
-            <label>Subtitle</label>
-            <input type="text" id="edit-subtitle" value="Computer Science Student & Math Minor">
-
-            <label>About Me (Paragraphs)</label>
-            <textarea id="edit-about"></textarea>
-
-            <label>Contact Email</label>
-            <input type="text" id="edit-email" value="leontatwing@gmail.com">
-
-            <div class="editor-actions">
-                <button class="btn-save" onclick="applyChanges()">Apply Changes</button>
-            </div>
-
-            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #334155;">
-            <p style="font-size: 0.8rem; color: #94a3b8;">Note: This editor updates the page live for testing.
-                Refreshing the page will reset content.</p>
-        </div>
-    </aside>
-    -->
     <script>
-        const matrixConfig = "eyJjb250cm9sbGVycyI6e30sImZvbGRlcnMiOnsiUmFpbiI6eyJjb250cm9sbGVycyI6eyJNYXRyaXggU3BlZWQiOjI0LCJUcmFpbCBMZW5ndGgiOjAuOSwiRHJvcCBDb3VudC9Db2x1bW4iOjIsIkluaXRpYWwgQW5pbWF0aW9uIjoiMSJ9LCJmb2xkZXJzIjp7fX0sIkNvbG9yIjp7ImNvbnRyb2xsZXJzIjp7IkNvbG9yIE1vZGUiOiIwIiwiTWF0cml4IENvbG9yIjoiIzAwZmYwMCIsIkNvbG9yIEFuaW1hdGlvbiBTcGVlZCI6MCwiSGlnaGxpZ2h0IEZpcnN0IENoYXJhY3RlciI6dHJ1ZX0sImZvbGRlcnMiOnt9fSwiQ2hhcmFjdGVycyI6eyJjb250cm9sbGVycyI6eyJDaGFyIHNldCI6IjQiLCJDdXN0b20gQ2hhciBTZXQiOiIwMTIzNDU2Nzg5QUJDREVGIn0sImZvbGRlcnMiOnt9fSwiRm9udCI6eyJjb250cm9sbGVycyI6eyJGb250IFNpemUiOjE0LCJGb250IjoiMyIsIkN1c3RvbSBGb250IjoibW9ub3NwYWNlIn0sImZvbGRlcnMiOnt9fSwiQXVkaW8gKG5vdCBhdmFpbGFibGUgaW4gd2ViIHZlcnNpb24pIjp7ImNvbnRyb2xsZXJzIjp7fSwiZm9sZGVycyI6e319LCJMb2dvIjp7ImNvbnRyb2xsZXJzIjp7IkxvZ28iOiIwIiwiQ3VzdG9tIExvZ28gVVJMIChTVkcvUE5HKSI6IiIsIlByZXNlcnZlIExvZ28gQ29sb3IiOmZhbHNlLCJTY2FsZSI6MX0sImZvbGRlcnMiOnsiUG9zaXRpb24iOnsiY29udHJvbGxlcnMiOnsiWCI6MCwiWSI6MH0sImZvbGRlcnMiOnt9fX19LCJDbG9jayI6eyJjb250cm9sbGVycyI6eyJDbG9jayI6IjAiLCIyNCBIb3VyIGZvcm1hdCI6dHJ1ZSwiRGF5LWxpZ2h0IFNhdmluZyI6MCwiU2NhbGUiOjF9LCJmb2xkZXJzIjp7IlBvc2l0aW9uIjp7ImNvbnRyb2xsZXJzIjp7IlgiOjAsIlkiOjB9LCJmb2xkZXJzIjp7fX19fSwiRGF5Ijp7ImNvbnRyb2xsZXJzIjp7IkRheSI6IjAiLCJBbGwgQ0FQUyI6ZmFsc2UsIlZlcnRpY2FsIE9yaWVudGF0aW9uIjpmYWxzZSwiU2NhbGUiOjF9LCJmb2xkZXJzIjp7IlBvc2l0aW9uIjp7ImNvbnRyb2xsZXJzIjp7IlgiOjAsIlkiOjB9LCJmb2xkZXJzIjp7fX19fSwiRGF0ZSI6eyJjb250cm9sbGVycyI6eyJEYXRlIjoiMCIsIlllYXIiOiIyIiwiT3JkZXIiOiIwIiwiTW9udGggTmFtZSI6ZmFsc2UsIkFsbCBDQVBTIjpmYWxzZSwiRGVsaW1pdGVyIjoiMCIsIlN0eWxlIjoiMCIsIlNjYWxlIjoxfSwiZm9sZGVycyI6eyJQb3NpdGlvbiI6eyJjb250cm9sbGVycyI6eyJYIjowLCJZIjowfSwiZm9sZGVycyI6e319fX0sIk1lc3NhZ2UiOnsiY29udHJvbGxlcnMiOnsiTWVzc2FnZSI6ZmFsc2UsIk1lc3NhZ2UgVGV4dCI6IlRIRSBNQVRSSVgiLCJTY2FsZSI6MX0sImZvbGRlcnMiOnsiUG9zaXRpb24iOnsiY29udHJvbGxlcnMiOnsiWCI6MCwiWSI6MH0sImZvbGRlcnMiOnt9fX19LCJPdGhlciI6eyJjb250cm9sbGVycyI6eyJDb2RlcyAoQ29tbWEgc2VwYXJhdGVkKSI6IklQLkFGLFRIRSBNQVRSSVgifSwiZm9sZGVycyI6e319fX0=";
-        const cleanUrl = "https://leonwtw.github.io/NeoMatrix/?preset=" + encodeURIComponent(matrixConfig);
-        document.querySelector('.matrix-bg').src = cleanUrl;
-
-        // --- EDITOR LOGIC ---
-
-        const editorPanel = document.getElementById('editorPanel');
-        const domElements = {
-            name: document.getElementById('hero-name'),
-            subtitle: document.getElementById('hero-subtitle'),
-            about: document.getElementById('about-content'),
-            emailLink: document.getElementById('contact-email-link')
+        // ========================================
+        // 完整的 Matrix Rain 配置
+        // ========================================
+        const CONFIG = {
+            // === 基本設置 ===
+            fontSize: 15,                    // 字體大小（像素）
+            matrixSpeed: 19,                 // 速度（1-30，越大越快）
+            characters: '0123456789ABCDEF',  // 字符集
+            
+            // === 顏色設置 ===
+            matrixColor: '#00ff00',          // 主要顏色（純綠色）
+            highlightFirst: true,            // 是否高亮第一個字符
+            highlightColor: '#ffffff',       // 高亮顏色（白色）
+            colorMode: 'static',             // 顏色模式: 'static', 'rainbow', 'gradient'
+            rainbowSpeed: 1,                 // 彩虹模式的速度（僅當 colorMode='rainbow'）
+            
+            // === 拖尾效果 ===
+            trailLength: 0.85,               // 拖尾長度（0-1，越大尾巴越長）
+            fadeStyle: 'exponential',        // 淡出樣式: 'exponential', 'linear'
+            
+            // === 下落設置 ===
+            dropSpeed: 2,                    // 每列下落速度（1=正常）
+            dropSpeedVariation: 1,         // 速度變化（0-1，增加隨機性）
+            dropsPerColumn: 3,               // 每列同時有幾個下落（1-5）
+            
+            // === 啟動動畫 ===
+            initialAnimation: 'fall',        // 啟動動畫: 'fall', 'scatter', 'none'
+            initialDelay: 0,               // 啟動延遲（毫秒）
+            
+            // === 字符變化 ===
+            characterFlip: true,             // 字符是否隨機變化
+            flipProbability: 1,           // 字符變化概率（0-1）
+            
+            // === 密度控制 ===
+            columnSpacing: 1,              // 列間距倍數（1.0=正常，1.5=稀疏）
+            resetProbability: 0.025,         // 重置到頂部的概率
+            
+            // === 性能優化 ===
+            targetFPS: 30,                   // 目標幀率
+            
+            // === 高級效果 ===
+            glowEffect: true,               // 是否添加發光效果
+            glowIntensity: 1,              // 發光強度（0-1）
+            scanlineEffect: true,           // 是否添加掃描線效果
+            
+            // === 背景 ===
+            backgroundColor: '#000000',      // 背景顏色
+            backgroundOpacity: 1.0           // 背景不透明度（0-1）
         };
 
-        const inputs = {
-            name: document.getElementById('edit-name'),
-            subtitle: document.getElementById('edit-subtitle'),
-            about: document.getElementById('edit-about'),
-            email: document.getElementById('edit-email')
-        };
+        // ========================================
+        // Matrix Rain 實現
+        // ========================================
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
 
-        function toggleEditor() {
-            const isOpen = editorPanel.classList.contains('open');
-            if (!isOpen) {
-                // Populate inputs with current DOM content when opening
-                inputs.name.value = domElements.name.innerText;
-                inputs.subtitle.value = domElements.subtitle.innerText;
+        let width, height, columns;
+        let drops = [];
+        let dropSpeeds = [];
+        let hue = 0;  // 用於彩虹效果
 
-                // Convert HTML paragraphs back to text with newlines for editing
-                let aboutText = domElements.about.innerHTML;
-                // Simple regex to replace <p> tags with newlines for the textarea
-                aboutText = aboutText.replace(/<p>/g, '').replace(/<\/p>/g, '\n\n').trim();
-                inputs.about.value = aboutText;
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            
+            // 根據 columnSpacing 調整列數
+            const adjustedFontSize = CONFIG.fontSize * CONFIG.columnSpacing;
+            columns = Math.floor(width / adjustedFontSize);
+            
+            initDrops();
+        }
 
-                inputs.email.value = domElements.emailLink.innerText;
+        function initDrops() {
+            drops = [];
+            dropSpeeds = [];
+            
+            for (let i = 0; i < columns; i++) {
+                // 根據 initialAnimation 設置初始位置
+                if (CONFIG.initialAnimation === 'fall') {
+                    drops[i] = Math.random() * -100;
+                } else if (CONFIG.initialAnimation === 'scatter') {
+                    drops[i] = Math.random() * height / CONFIG.fontSize;
+                } else {
+                    drops[i] = 0;
+                }
+                
+                // 為每列設置隨機速度變化
+                const speedVariation = 1 + (Math.random() - 0.5) * CONFIG.dropSpeedVariation;
+                dropSpeeds[i] = CONFIG.dropSpeed * speedVariation;
             }
-            editorPanel.classList.toggle('open');
         }
 
-        function applyChanges() {
-            // Update Hero
-            domElements.name.innerText = inputs.name.value;
-            domElements.subtitle.innerText = inputs.subtitle.value;
+        function getColor(x, y) {
+            switch (CONFIG.colorMode) {
+                case 'rainbow':
+                    // 彩虹效果 - 根據位置和時間
+                    const rainbowHue = (hue + x * 10) % 360;
+                    return `hsl(${rainbowHue}, 100%, 50%)`;
+                    
+                case 'gradient':
+                    // 漸變效果 - 從上到下
+                    const gradientHue = (y / height) * 120;  // 0-120度（紅到綠）
+                    return `hsl(${gradientHue}, 100%, 50%)`;
+                    
+                case 'static':
+                default:
+                    return CONFIG.matrixColor;
+            }
+        }
 
-            // Update About Me (Convert newlines back to <p> tags)
-            const rawAbout = inputs.about.value.split('\n\n');
-            const htmlAbout = rawAbout.map(para => para.trim() ? `<p>${para.trim()}</p>` : '').join('');
-            domElements.about.innerHTML = htmlAbout;
+        function drawMatrix() {
+            // 背景淡化效果
+            const fadeAlpha = CONFIG.fadeStyle === 'exponential' 
+                ? 1 - CONFIG.trailLength 
+                : 0.05;
+            
+            ctx.fillStyle = `rgba(0, 0, 0, ${fadeAlpha})`;
+            ctx.fillRect(0, 0, width, height);
 
-            // Update Email
-            domElements.emailLink.innerText = inputs.email.value;
-            domElements.emailLink.href = `mailto:${inputs.email.value}`;
+            // 發光效果
+            if (CONFIG.glowEffect) {
+                ctx.shadowBlur = CONFIG.glowIntensity * 20;
+                ctx.shadowColor = CONFIG.matrixColor;
+            }
 
-            // Visual Feedback
-            const saveBtn = document.querySelector('.btn-save');
-            const originalText = saveBtn.innerText;
-            saveBtn.innerText = "Saved!";
-            saveBtn.style.background = "#fff";
+            ctx.font = `${CONFIG.fontSize}px monospace`;
+
+            for (let i = 0; i < columns; i++) {
+                // 隨機選擇字符
+                let char = CONFIG.characters.charAt(
+                    Math.floor(Math.random() * CONFIG.characters.length)
+                );
+                
+                // 字符隨機變化
+                if (CONFIG.characterFlip && Math.random() < CONFIG.flipProbability) {
+                    char = CONFIG.characters.charAt(
+                        Math.floor(Math.random() * CONFIG.characters.length)
+                    );
+                }
+
+                const x = i * CONFIG.fontSize * CONFIG.columnSpacing;
+                const y = drops[i] * CONFIG.fontSize;
+
+                // 高亮第一個字符
+                if (CONFIG.highlightFirst && y > 0) {
+                    ctx.fillStyle = CONFIG.highlightColor;
+                    ctx.fillText(char, x, y);
+                }
+
+                // 主字符
+                ctx.fillStyle = getColor(i, y);
+                ctx.fillText(char, x, y);
+
+                // 更新位置
+                drops[i] += dropSpeeds[i];
+
+                // 重置到頂部
+                if (y > height && Math.random() > (1 - CONFIG.resetProbability)) {
+                    drops[i] = 0;
+                }
+            }
+
+            // 更新彩虹色相
+            if (CONFIG.colorMode === 'rainbow') {
+                hue = (hue + CONFIG.rainbowSpeed) % 360;
+            }
+
+            // 關閉發光效果
+            if (CONFIG.glowEffect) {
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        function animate() {
+            drawMatrix();
+            
+            const frameDelay = 1000 / CONFIG.targetFPS;
+            const speedAdjustment = 50 / (CONFIG.matrixSpeed / 10);
+            
             setTimeout(() => {
-                saveBtn.innerText = originalText;
-                saveBtn.style.background = "";
-            }, 1000);
+                requestAnimationFrame(animate);
+            }, Math.max(frameDelay, speedAdjustment));
         }
+
+        // 初始化
+        setTimeout(() => {
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            animate();
+            
+            console.log('✅ Matrix Rain 啟動成功');
+            console.log('配置:', CONFIG);
+        }, CONFIG.initialDelay);
     </script>
 </body>
-
-</html> :::
+</html>
