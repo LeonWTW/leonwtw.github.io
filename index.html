@@ -1,690 +1,677 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leon Wong | CS & Math</title>
-    <style>
-        :root {
-            --color-bg: #0f172a;
-            --color-card: rgba(15, 23, 42, 0.75);
-            --color-text: #e5e7eb;
-            --color-text-muted: #9ca3af;
-            --color-matrix: #22c55e;
-            --color-matrix-glow: #4ade80;
-            --font-mono: "Courier New", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-            --font-sans: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-            --radius: 16px;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: var(--font-sans);
-            color: var(--color-text);
-            background-color: var(--color-bg);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-        #matrix-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
-            position: relative;
-            z-index: 1;
-        }
-        section { margin-bottom: 3rem; }
-        h1, h2, h3 {
-            font-family: var(--font-mono);
-            color: #fff;
-            letter-spacing: -0.02em;
-        }
-        h1 {
-            font-size: 2.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 0;
-        }
-        h2 {
-            font-size: 1.75rem;
-            margin-bottom: 1.5rem;
-            border-left: 4px solid var(--color-matrix);
-            padding-left: 1rem;
-            display: flex;
-            align-items: center;
-        }
-        h3 {
-            font-size: 1.25rem;
-            color: var(--color-matrix-glow);
-            margin-bottom: 0.5rem;
-        }
-        p { margin-bottom: 1rem; color: var(--color-text-muted); }
-        a {
-            color: var(--color-matrix);
-            text-decoration: none;
-            transition: 0.2s;
-        }
-        a:hover {
-            color: var(--color-matrix-glow);
-            text-decoration: underline;
-        }
-        .card {
-            background: var(--color-card);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: var(--radius);
-            padding: 2rem;
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(15px);
-        }
-        .hero {
-            text-align: center;
-            padding: 4rem 0;
-        }
-        .hero-subtitle {
-            font-size: 1.3rem;
-            color: #e5e7eb;
-            margin-bottom: 2rem;
-        }
-        .btn-group {
-            display: flex;
-            gap: 3rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .btn {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            border: 2px solid var(--color-matrix);
-            border-radius: 50px;
-            color: var(--color-matrix);
-            font-family: var(--font-mono);
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            transition: all 0.3s ease;
-            background: rgba(34, 197, 94, 0.1);
-        }
-        .btn:hover {
-            background: var(--color-matrix);
-            color: #000;
-            box-shadow: 0 0 15px var(--color-matrix);
-            text-decoration: none;
-        }
-        .project-card {
-            margin-bottom: 2rem;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .project-card:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-            margin-bottom: 0;
-        }
-        .tags {
-            font-size: 0.8rem;
-            font-family: var(--font-mono);
-            color: var(--color-text-muted);
-            margin-top: 0.5rem;
-            display: block;
-        }
-        .skills-list {
-            list-style: none;
-            padding-left: 0;
-        }
-        .skills-list li {
-            margin-bottom: 1.5rem;
-            padding-left: 1.5rem;
-            position: relative;
-        }
-        .skills-list li::before {
-            content: "▸";
-            position: absolute;
-            left: 0;
-            color: var(--color-matrix);
-            font-family: var(--font-mono);
-        }
-        .skill-category {
-            font-weight: bold;
-            color: var(--color-matrix-glow);
-            font-family: var(--font-mono);
-            display: block;
-            margin-bottom: 0.25rem;
-        }
-        footer {
-            text-align: center;
-            padding: 2rem 1.5rem;
-            color: var(--color-text-muted);
-            font-family: var(--font-mono);
-            font-size: 0.9rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leon Wong | CS & Math</title>
+<style>
+:root {
+--color-bg: #0f172a;
+--color-card: rgba(15, 23, 42, 0.75);
+--color-text: #e5e7eb;
+--color-text-muted: #9ca3af;
+--color-matrix: #22c55e;
+--color-matrix-glow: #4ade80;
+--font-mono: "Courier New", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+--font-sans: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+--radius: 16px;
+}
 
-        /* =========================================
-           特效 CSS
-           ========================================= */
-        
-        .hero-content-wrapper {
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(8px);
-            padding: 3rem 4rem;
-            border-radius: 24px;
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            box-shadow: 0 0 40px rgba(34, 197, 94, 0.1);
-            display: inline-block;
-            position: relative;
-            overflow: hidden;
-            max-width: 100%;
-        }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .hero-content-wrapper::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, transparent 50%, rgba(34, 197, 94, 0.05) 51%);
-            background-size: 100% 4px;
-            pointer-events: none;
-            z-index: 1;
-        }
+body {
+font-family: var(--font-sans);
+color: var(--color-text);
+background-color: var(--color-bg);
+line-height: 1.6;
+overflow-x: hidden;
+}
 
-        .glitch-text {
-            position: relative;
-            color: #fff;
-            font-size: 3.5rem;
-            font-weight: 800;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            text-shadow: 2px 2px 0px var(--color-matrix), -2px -2px 0px #eb00ff;
-            animation: glitch-skew 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite both;
-            z-index: 2;
-            margin-bottom: 1rem;
-            display: block;
-        }
+#matrix-canvas {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: -1;
+pointer-events: none;
+}
 
-        @media (max-width: 768px) {
-            .glitch-text { font-size: 2rem; }
-            .hero-content-wrapper { padding: 2rem 1.5rem; }
-        }
+.container {
+max-width: 900px;
+margin: 0 auto;
+padding: 2rem 1.5rem;
+position: relative;
+z-index: 1;
+}
 
-        .glitch-text::before,
-        .glitch-text::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.0); 
-            opacity: 0.8;
-        }
+section { margin-bottom: 3rem; }
 
-        .glitch-text::before {
-            left: 2px;
-            text-shadow: -2px 0 #ff00c1;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim 5s infinite linear alternate-reverse;
-        }
+h1, h2, h3 {
+font-family: var(--font-mono);
+color: #fff;
+letter-spacing: -0.02em;
+}
 
-        .glitch-text::after {
-            left: -2px;
-            text-shadow: -2px 0 #00fff9;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim 5s infinite linear alternate-reverse;
-        }
+h1 {
+font-size: 2.5rem;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+margin-bottom: 0;
+}
 
-        /* 3. Subtitle 打字機效果 (已修改：光標自動消失) */
-        .typing-wrapper {
-            display: inline-block;
-            max-width: 100%;
-            overflow: hidden;
-        }
+h2 {
+font-size: 1.75rem;
+margin-bottom: 1.5rem;
+border-left: 4px solid var(--color-matrix);
+padding-left: 1rem;
+display: flex;
+align-items: center;
+}
 
-        .typing-text {
-            font-family: var(--font-mono);
-            font-size: 1.2rem;
-            color: var(--color-matrix-glow);
-            border-right: 3px solid var(--color-matrix); /* 光標 */
-            white-space: nowrap;
-            overflow: hidden;
-            width: 0;
-            /* 修改說明：
-               blink-caret 從 infinite 改為 6 forwards。
-               這意味著光標會閃爍約 6 次 (6 * 0.75s = 4.5s)，
-               這段時間足夠打字動畫完成 (3s)。
-               最後 forwards 屬性會讓它停留在動畫的最後一幀 (border-color: transparent)，
-               從而實現光標消失的效果。
-            */
-            animation: typing 3s steps(40, end) forwards, blink-caret .75s step-end 5 forwards;
-            animation-delay: 0.5s;
-            margin: 0 auto 2rem auto;
-        }
-        
-        @media (max-width: 600px) {
-            .typing-text {
-                font-size: 1rem;
-                white-space: normal;
-                width: auto;
-                border-right: none;
-                animation: none;
-            }
-        }
+h3 {
+font-size: 1.25rem;
+color: var(--color-matrix-glow);
+margin-bottom: 0.5rem;
+}
 
-        @keyframes glitch-skew {
-            0% { transform: skew(0deg); }
-            20% { transform: skew(-2deg); }
-            40% { transform: skew(2deg); }
-            60% { transform: skew(0deg); }
-            80% { transform: skew(-1deg); }
-            100% { transform: skew(0deg); }
-        }
+p { margin-bottom: 1rem; color: var(--color-text-muted); }
 
-        @keyframes glitch-anim {
-            0% { clip: rect(42px, 9999px, 44px, 0); transform: skew(0.85deg); }
-            5% { clip: rect(12px, 9999px, 59px, 0); transform: skew(0.85deg); }
-            10% { clip: rect(48px, 9999px, 29px, 0); transform: skew(0.25deg); }
-            15% { clip: rect(40px, 9999px, 7px, 0); transform: skew(0.12deg); }
-            20% { clip: rect(62px, 9999px, 78px, 0); transform: skew(0.87deg); }
-            25% { clip: rect(25px, 9999px, 35px, 0); transform: skew(0.96deg); }
-            30% { clip: rect(66px, 9999px, 19px, 0); transform: skew(0.39deg); }
-            35% { clip: rect(79px, 9999px, 80px, 0); transform: skew(0.68deg); }
-            40% { clip: rect(13px, 9999px, 72px, 0); transform: skew(0.66deg); }
-            45% { clip: rect(35px, 9999px, 51px, 0); transform: skew(0.06deg); }
-            50% { clip: rect(72px, 9999px, 12px, 0); transform: skew(0.48deg); }
-            55% { clip: rect(48px, 9999px, 74px, 0); transform: skew(0.29deg); }
-            60% { clip: rect(23px, 9999px, 3px, 0); transform: skew(0.95deg); }
-            65% { clip: rect(27px, 9999px, 75px, 0); transform: skew(0.35deg); }
-            70% { clip: rect(84px, 9999px, 83px, 0); transform: skew(0.77deg); }
-            75% { clip: rect(63px, 9999px, 95px, 0); transform: skew(0.12deg); }
-            80% { clip: rect(29px, 9999px, 2px, 0); transform: skew(0.93deg); }
-            85% { clip: rect(5px, 9999px, 72px, 0); transform: skew(0.1deg); }
-            90% { clip: rect(25px, 9999px, 23px, 0); transform: skew(0.33deg); }
-            95% { clip: rect(57px, 9999px, 17px, 0); transform: skew(0.85deg); }
-            100% { clip: rect(8px, 9999px, 88px, 0); transform: skew(0.43deg); }
-        }
+a {
+color: var(--color-matrix);
+text-decoration: none;
+transition: 0.2s;
+}
 
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
-        }
+a:hover {
+color: var(--color-matrix-glow);
+text-decoration: underline;
+}
 
-        @keyframes blink-caret {
-            from, to { border-color: transparent }
-            50% { border-color: var(--color-matrix) }
-        }
-    </style>
+.card {
+background: var(--color-card);
+border: 1px solid rgba(255, 255, 255, 0.1);
+border-radius: var(--radius);
+padding: 2rem;
+box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+backdrop-filter: blur(15px);
+}
+
+.hero {
+text-align: center;
+padding: 4rem 0;
+}
+
+.hero-subtitle {
+font-size: 1.3rem;
+color: #e5e7eb;
+margin-bottom: 2rem;
+}
+
+.btn-group {
+display: flex;
+gap: 3rem;
+justify-content: center;
+flex-wrap: wrap;
+}
+
+.btn {
+display: inline-block;
+padding: 0.75rem 1.5rem;
+border: 2px solid var(--color-matrix);
+border-radius: 50px;
+color: var(--color-matrix);
+font-family: var(--font-mono);
+font-weight: bold;
+text-transform: uppercase;
+font-size: 0.85rem;
+transition: all 0.3s ease;
+background: rgba(34, 197, 94, 0.1);
+}
+
+.btn:hover {
+background: var(--color-matrix);
+color: #000;
+box-shadow: 0 0 15px var(--color-matrix);
+text-decoration: none;
+}
+
+.project-card {
+margin-bottom: 2rem;
+padding-bottom: 2rem;
+border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.project-card:last-child {
+border-bottom: none;
+padding-bottom: 0;
+margin-bottom: 0;
+}
+
+.tags {
+font-size: 0.8rem;
+font-family: var(--font-mono);
+color: var(--color-text-muted);
+margin-top: 0.5rem;
+display: block;
+}
+
+.project-links {
+margin-top: 0.75rem;
+display: flex;
+gap: 1rem;
+}
+
+.project-links a {
+font-size: 0.85rem;
+font-family: var(--font-mono);
+padding: 0.3rem 0.8rem;
+border: 1px solid rgba(34, 197, 94, 0.4);
+border-radius: 20px;
+transition: all 0.3s ease;
+}
+
+.project-links a:hover {
+background: rgba(34, 197, 94, 0.15);
+text-decoration: none;
+}
+
+.skills-list {
+list-style: none;
+padding-left: 0;
+}
+
+.skills-list li {
+margin-bottom: 1.5rem;
+padding-left: 1.5rem;
+position: relative;
+}
+
+.skills-list li::before {
+content: "▸";
+position: absolute;
+left: 0;
+color: var(--color-matrix);
+font-family: var(--font-mono);
+}
+
+.skill-category {
+font-weight: bold;
+color: var(--color-matrix-glow);
+font-family: var(--font-mono);
+display: block;
+margin-bottom: 0.25rem;
+}
+
+footer {
+text-align: center;
+padding: 2rem 1.5rem;
+color: var(--color-text-muted);
+font-family: var(--font-mono);
+font-size: 0.9rem;
+border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* =========================================
+   特效 CSS
+========================================= */
+
+.hero-content-wrapper {
+background: rgba(15, 23, 42, 0.75);
+backdrop-filter: blur(8px);
+padding: 3rem 4rem;
+border-radius: 24px;
+border: 1px solid rgba(34, 197, 94, 0.3);
+box-shadow: 0 0 40px rgba(34, 197, 94, 0.1);
+display: inline-block;
+position: relative;
+overflow: hidden;
+max-width: 100%;
+}
+
+.hero-content-wrapper::before {
+content: "";
+position: absolute;
+top: 0; left: 0; width: 100%; height: 100%;
+background: linear-gradient(to bottom, transparent 50%, rgba(34, 197, 94, 0.05) 51%);
+background-size: 100% 4px;
+pointer-events: none;
+z-index: 1;
+}
+
+.glitch-text {
+position: relative;
+color: #fff;
+font-size: 3.5rem;
+font-weight: 800;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+text-shadow: 2px 2px 0px var(--color-matrix), -2px -2px 0px #eb00ff;
+animation: glitch-skew 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite both;
+z-index: 2;
+margin-bottom: 1rem;
+display: block;
+}
+
+@media (max-width: 768px) {
+.glitch-text { font-size: 2rem; }
+.hero-content-wrapper { padding: 2rem 1.5rem; }
+}
+
+.glitch-text::before,
+.glitch-text::after {
+content: attr(data-text);
+position: absolute;
+top: 0; left: 0; width: 100%; height: 100%;
+background: rgba(15, 23, 42, 0.0);
+opacity: 0.8;
+}
+
+.glitch-text::before {
+left: 2px;
+text-shadow: -2px 0 #ff00c1;
+clip: rect(44px, 450px, 56px, 0);
+animation: glitch-anim 5s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+left: -2px;
+text-shadow: -2px 0 #00fff9;
+clip: rect(44px, 450px, 56px, 0);
+animation: glitch-anim 5s infinite linear alternate-reverse;
+}
+
+.typing-wrapper {
+display: inline-block;
+max-width: 100%;
+overflow: hidden;
+}
+
+.typing-text {
+font-family: var(--font-mono);
+font-size: 1.2rem;
+color: var(--color-matrix-glow);
+border-right: 3px solid var(--color-matrix);
+white-space: nowrap;
+overflow: hidden;
+width: 0;
+animation: typing 3s steps(40, end) forwards, blink-caret .75s step-end 5 forwards;
+animation-delay: 0.5s;
+margin: 0 auto 2rem auto;
+}
+
+@media (max-width: 600px) {
+.typing-text {
+font-size: 1rem;
+white-space: normal;
+width: auto;
+border-right: none;
+animation: none;
+}
+}
+
+@keyframes glitch-skew {
+0% { transform: skew(0deg); }
+20% { transform: skew(-2deg); }
+40% { transform: skew(2deg); }
+60% { transform: skew(0deg); }
+80% { transform: skew(-1deg); }
+100% { transform: skew(0deg); }
+}
+
+@keyframes glitch-anim {
+0% { clip: rect(42px, 9999px, 44px, 0); transform: skew(0.85deg); }
+5% { clip: rect(12px, 9999px, 59px, 0); transform: skew(0.85deg); }
+10% { clip: rect(48px, 9999px, 29px, 0); transform: skew(0.25deg); }
+15% { clip: rect(40px, 9999px, 7px, 0); transform: skew(0.12deg); }
+20% { clip: rect(62px, 9999px, 78px, 0); transform: skew(0.87deg); }
+25% { clip: rect(25px, 9999px, 35px, 0); transform: skew(0.96deg); }
+30% { clip: rect(66px, 9999px, 19px, 0); transform: skew(0.39deg); }
+35% { clip: rect(79px, 9999px, 80px, 0); transform: skew(0.68deg); }
+40% { clip: rect(13px, 9999px, 72px, 0); transform: skew(0.66deg); }
+45% { clip: rect(35px, 9999px, 51px, 0); transform: skew(0.06deg); }
+50% { clip: rect(72px, 9999px, 12px, 0); transform: skew(0.48deg); }
+55% { clip: rect(48px, 9999px, 74px, 0); transform: skew(0.29deg); }
+60% { clip: rect(23px, 9999px, 3px, 0); transform: skew(0.95deg); }
+65% { clip: rect(27px, 9999px, 75px, 0); transform: skew(0.35deg); }
+70% { clip: rect(84px, 9999px, 83px, 0); transform: skew(0.77deg); }
+75% { clip: rect(63px, 9999px, 95px, 0); transform: skew(0.12deg); }
+80% { clip: rect(29px, 9999px, 2px, 0); transform: skew(0.93deg); }
+85% { clip: rect(5px, 9999px, 72px, 0); transform: skew(0.1deg); }
+90% { clip: rect(25px, 9999px, 23px, 0); transform: skew(0.33deg); }
+95% { clip: rect(57px, 9999px, 17px, 0); transform: skew(0.85deg); }
+100% { clip: rect(8px, 9999px, 88px, 0); transform: skew(0.43deg); }
+}
+
+@keyframes typing {
+from { width: 0 }
+to { width: 100% }
+}
+
+@keyframes blink-caret {
+from, to { border-color: transparent }
+50% { border-color: var(--color-matrix) }
+}
+</style>
 </head>
-
 <body>
-    <canvas id="matrix-canvas"></canvas>
-    
-    <main class="container">
-        <section class="hero">
-            <div class="hero-content-wrapper">
-                <h1 class="glitch-text" data-text="Leon Wong">Leon Wong</h1>
-                
-                <div class="typing-wrapper">
-                    <p class="hero-subtitle typing-text">Computer Science Student & Math Minor</p>
-                </div>
-                
-                <div class="btn-group" style="margin-top: 2rem;">
-                    <a href="https://github.com/LeonWTW" target="_blank" class="btn">GitHub</a>
-                    <a href="https://www.linkedin.com/in/leonwongwtw" target="_blank" class="btn">LinkedIn</a>
-                    <a href="Leon_Wong_Resume.pdf" target="_blank" class="btn">Resume</a>
-                </div>
-            </div>
-        </section>
+<canvas id="matrix-canvas"></canvas>
 
-        <section id="about" class="card">
-            <h2>About Me</h2>
-            <p>I'm a Computer Science student at the University of Oregon with a Mathematics minor and a very
-                hands-on way of learning. I like working close to the system with C, Linux, and data structures, but
-                I also enjoy building data-driven web applications using Python, Flask, and REST APIs.</p>
-            <p>I'm especially interested in products that actually make people's lives easier, instead of just
-                adding more noise. Recently I've been drawn to ideas around "elderly tech" — tools that support
-                older adults and caregivers in simple, practical ways. I like taking messy problems, breaking them
-                down into small, testable steps, and turning them into something real that people can use.</p>
-        </section>
+<main class="container">
 
-        <section id="projects" class="card">
-            <h2>Projects</h2>
-            <div class="project-card">
-                <h3>Full-Stack REST API Web Service</h3>
-                <p>A RESTful web service that exposes CRUD APIs over structured data, built with Flask and Docker.
-                    Uses MongoDB for persistent storage, environment-based configuration, and is tested with Postman
-                    collections.</p>
-                <span class="tags">Tags: Python · Flask · Docker · MongoDB · REST APIs</span>
-            </div>
-            <div class="project-card">
-                <h3>TradeLab – Trading Strategy Backtester</h3>
-                <p>A Python-based backtesting tool for evaluating stock trading strategies on historical data.
-                    Fetches price data, applies modular strategy components, and visualizes returns and drawdowns
-                    for comparison.</p>
-                <span class="tags">Tags: Python · Pandas · NumPy · Matplotlib · CLI</span>
-            </div>
-            <div class="project-card">
-                <h3>Brevet Time Calculator</h3>
-                <p>A web app that computes ACP brevet control times based on cycling distances and rules. Built with
-                    Flask, tested with unit tests, and containerized with Docker for easy deployment.</p>
-                <span class="tags">Tags: Python · Flask · Docker · Algorithms</span>
-            </div>
-            <div class="project-card">
-                <h3>Data Structures in C</h3>
-                <p>A collection of C data structure implementations focusing on dynamic arrays, stacks, queues, and
-                    heaps. Emphasizes memory management with malloc/free, pointer arithmetic, and performance
-                    considerations.</p>
-                <span class="tags">Tags: C · Data Structures · Memory Management · Performance</span>
-            </div>
-        </section>
+<!-- ========== HERO ========== -->
+<section class="hero">
+<div class="hero-content-wrapper">
+<h1 class="glitch-text" data-text="Leon Wong">Leon Wong</h1>
+<div class="typing-wrapper">
+<p class="hero-subtitle typing-text">Computer Science Student & Math Minor</p>
+</div>
+<div class="btn-group" style="margin-top: 2rem;">
+<a href="https://github.com/LeonWTW" target="_blank" class="btn">GitHub</a>
+<a href="https://www.linkedin.com/in/leonwongwtw" target="_blank" class="btn">LinkedIn</a>
+<a href="Leon_Wong_Resume.pdf" target="_blank" class="btn">Resume</a>
+</div>
+</div>
+</section>
 
-        <section id="skills" class="card">
-            <h2>Skills</h2>
-            <ul class="skills-list">
-                <li>
-                    <span class="skill-category">Languages:</span>
-                    Python, C, C++, Java, SQL, HTML, CSS, JavaScript, TypeScript, Bash
-                </li>
-                <li>
-                    <span class="skill-category">Frameworks & Tools:</span>
-                    Flask, Docker, Linux, AWS, REST APIs, Git, GitHub, Makefile, Shell scripting, Conda, virtualenv,
-                    Jupyter Notebook, Postman
-                </li>
-                <li>
-                    <span class="skill-category">Data & Analytics:</span>
-                    Pandas, NumPy, SQL, Scikit-learn, PyTorch, MongoDB, Matplotlib, Seaborn, Excel
-                </li>
-                <li>
-                    <span class="skill-category">Software Concepts:</span>
-                    Object-Oriented Programming (OOP), Design Patterns, Modular Programming, Algorithm Design, Data
-                    Structures, Time & Space Complexity, Memory Management, Concurrency, Testing & Debugging
-                </li>
-            </ul>
-        </section>
+<!-- ========== ABOUT ME (STEP 1: REWRITTEN) ========== -->
+<section id="about" class="card">
+<h2>About Me</h2>
+<p>Born and raised in Hong Kong, now studying Computer Science (with a Math minor) at the University of Oregon. I build things that work &mdash; backends, APIs, infrastructure &mdash; and I care about who they work for.</p>
+<p>That's what drew me to elderly tech: my <a href="#eldercare">ElderCare Connect</a> project started from watching how frustrating most apps are for older adults. I wanted to build something that felt invisible &mdash; so simple that the tech gets out of the way.</p>
+<p>Outside of class, I run my own <a href="#infra">self-hosted infrastructure</a> on a Hetzner VPS &mdash; reverse proxies, workflow automation, AI agent pipelines &mdash; because the best way to learn distributed systems is to operate one yourself.</p>
+</section>
 
-        <section id="contact" class="card">
-            <h2>Contact</h2>
-            <p>Email: <a href="mailto:leontatwing@gmail.com">leontatwing@gmail.com</a></p>
-            <p>GitHub: <a href="https://github.com/LeonWTW" target="_blank">github.com/LeonWTW</a></p>
-            <p>LinkedIn: <a href="https://www.linkedin.com/in/leonwongwtw" target="_blank">linkedin.com/in/leonwongwtw</a></p>
-        </section>
-    </main>
+<!-- ========== PROJECTS (STEP 2: REPLACED WITH STRONGEST WORK) ========== -->
+<section id="projects" class="card">
+<h2>Projects</h2>
 
-    <footer>
-        © 2025 Leon Wong
-    </footer>
+<div class="project-card" id="eldercare">
+<h3>ElderCare Connect &mdash; Elder-Care & Family Monitoring PWA</h3>
+<p><strong style="color: var(--color-text);">Problem:</strong> Most health apps assume tech-literate users &mdash; leaving elderly adults and their worried families with no practical way to stay connected around daily care.</p>
+<p><strong style="color: var(--color-text);">What I built:</strong> A two-sided web app where elderly users complete medication and wellness tasks through a dementia-friendly UI (high-contrast, large tap targets, single-action screens), while family members remotely monitor progress in real time. Implemented JWT auth with persistent device trust so elders never need to re-login, and role-based views that swap the entire UX between Elder and Family modes. Led a 4-person team as PM &amp; Scrum Lead &mdash; owned product scope, UX decisions, and sprint planning from day one.</p>
+<span class="tags">React &middot; Node.js &middot; JWT Auth &middot; MongoDB &middot; Docker Compose</span>
+<div class="project-links">
+<a href="https://github.com/LeonWTW/app4seniors/tree/main" target="_blank">GitHub</a>
+</div>
+</div>
 
-    <script>
-        // ========================================
-        // 🎉 終極版 Matrix Rain 配置
-        // ========================================
-        const CONFIG = {
-            // ============ 基本設置 ============
-            fontSize: 14,
-            matrixSpeed: 10,
-            
-            // ============ 字符集設置 ============
-            characterSet: 'full-ascii',
-            customCharacters: '',
-            spaceFrequency: 0.1,
-            
-            // ============ 顏色模式設置 ============
-            colorMode: 'gradient-trail',
-            matrixColor: '#00ff00',
-            rainbowSpeed: 1,
-            
-            gradientTrail: true,
-            trailColors: [
-                '#ffffff',  // 0: 白色 (head)
-                '#c7ffc7',  // 1: 最亮綠
-                '#8fff8f',  // 2: 次亮綠
-                '#57ff57',  // 3: 中綠
-                '#2fff2f',  // 4: 暗綠
-                '#007f00'   // 5: 最暗綠
-            ],
-            
-            highlightFirst: true,
-            highlightColor: '#ffffff',
-            
-            // ============ 拖尾效果 ============
-            trailLength: 0.5,
-            fadeStyle: 'exponential',
-            
-            variableTrailLength: true,
-            minTrailLength: 9,
-            maxTrailLength: 50,
-            
-            // ============ Glitch 效果 ============
-            glitchEnabled: true,
-            glitchProbability: 0.01,
-            
-            // ============ 下落設置 ============
-            dropSpeed: 1,
-            dropSpeedVariation: 0.5,
-            dropsPerColumn: 2,
-            
-            // ============ 啟動動畫 ============
-            initialAnimation: 'fall',
-            initialDelay: 100,
-            
-            // ============ 字符變化 ============
-            characterFlip: true,
-            flipProbability: 0.08,
-            
-            // ============ 密度控制 ============
-            columnSpacing: 0.95,
-            resetProbability: 0.03,
-            
-            // ============ 性能優化 ============
-            targetFPS: 30,
-            
-            // ============ 高級效果 ============
-            glowEffect: true,
-            glowIntensity: 0.7,
-            scanlineEffect: true,
-            
-            // ============ 背景 ============
-            backgroundColor: '#000000',
-            backgroundOpacity: 0.3
-        };
+<div class="project-card">
+<h3>Elderly Companion &mdash; AI Cognitive Health Tracker</h3>
+<p><strong style="color: var(--color-text);">Problem:</strong> Caregivers notice subtle cognitive changes day-to-day but have no structured way to track them or know when to escalate.</p>
+<p><strong style="color: var(--color-text);">What I built:</strong> A full-stack app where caregivers log daily observations (memory, orientation, mood) and receive AI-generated risk assessments that analyze multi-day trends. The Flask + MongoDB backend exposes a clean REST API; the OpenAI integration uses structured JSON parsing with engineered prompts to produce consistent, machine-readable outputs. Built graceful degradation so the entire app remains fully functional when the AI service is unavailable &mdash; no crashes, just a fallback message. One-command Docker Compose deployment.</p>
+<span class="tags">Flask &middot; MongoDB &middot; REST API &middot; OpenAI API &middot; Docker Compose &middot; Gunicorn</span>
+<div class="project-links">
+<a href="https://github.com/LeonWTW/Elderly-companion" target="_blank">GitHub</a>
+</div>
+</div>
 
-        const CHARACTER_SETS = {
-            'full-ascii': (() => {
-                let chars = '';
-                for (let i = 33; i <= 126; i++) {
-                    chars += String.fromCharCode(i);
-                }
-                return chars;
-            })(),
-            'hex': '0123456789ABCDEF',
-            'numbers': '0123456789',
-            'binary': '01',
-            'letters-upper': 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-            'letters-lower': 'abcdefghijklmnopqrstuvwxyz',
-            'letters': 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
-            'katakana': 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン',
-            'symbols': '!@#$%^&*()_+-=[]{}|;:,.<>?',
-        };
+<div class="project-card">
+<h3>AI Resume Pipeline &mdash; Multi-Agent Workflow Automation</h3>
+<p><strong style="color: var(--color-text);">Problem:</strong> Tailoring a resume per job posting takes 30&ndash;60 minutes. At scale, that&rsquo;s unsustainable.</p>
+<p><strong style="color: var(--color-text);">What I built:</strong> A Telegram-triggered pipeline that generates ATS-optimized, role-specific resumes in under 60 seconds. The 4-phase workflow &mdash; job ad parsing &rarr; adversarial debate between Claude Opus and GPT &rarr; resume generation with python-docx &rarr; automated critique loop &mdash; runs entirely on my self-hosted n8n instance. One Telegram message in, a polished .docx out.</p>
+<span class="tags">n8n &middot; Python &middot; Claude API &middot; OpenAI API &middot; Docker &middot; Telegram Bot</span>
+</div>
 
-        const canvas = document.getElementById('matrix-canvas');
-        const ctx = canvas.getContext('2d');
+<div class="project-card">
+<h3>Syllabify &mdash; AI-Powered Academic Organizer</h3>
+<p><strong style="color: var(--color-text);">Problem:</strong> Every semester, students manually copy deadlines from PDFs into their calendars &mdash; tedious, error-prone, and nobody actually keeps it updated.</p>
+<p><strong style="color: var(--color-text);">What I built:</strong> A platform that ingests course syllabi via an NLP pipeline, extracts assignments, exams, and office hours, then auto-syncs everything to Google Calendar. Upload a PDF, get a structured semester schedule with zero manual entry.</p>
+<span class="tags">React &middot; Node.js &middot; PostgreSQL &middot; Python NLP &middot; Google Calendar API</span>
+<div class="project-links">
+<a href="https://github.com/cs-keni/syllabify" target="_blank">GitHub</a>
+</div>
+</div>
+</section>
 
-        let width, height, columns;
-        let drops = [];
-        let dropSpeeds = [];
-        let trailLengths = [];
-        let chars = [];
-        let hue = 0;
+<!-- ========== INFRASTRUCTURE (STEP 3: NEW SECTION) ========== -->
+<section id="infra" class="card">
+<h2>Infrastructure I Run</h2>
+<p style="margin-bottom: 1.5rem;">I self-host and maintain my own production infrastructure &mdash; not for a class, but because I wanted to understand how real systems work from DNS to deployment.</p>
 
-        function resizeCanvas() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-            
-            const adjustedFontSize = CONFIG.fontSize * CONFIG.columnSpacing;
-            columns = Math.floor(width / adjustedFontSize);
-            
-            initDrops();
-        }
+<div class="project-card">
+<h3>Self-Hosted VPS Stack</h3>
+<p>Hetzner Cloud VPS running Ubuntu, managed with <strong style="color: var(--color-matrix-glow);">Coolify</strong> (open-source PaaS). Traefik reverse proxy with automatic Let's Encrypt SSL, Cloudflare DNS, PostgreSQL + MongoDB backends, all containerized with Docker Compose.</p>
+<span class="tags">Hetzner &middot; Coolify &middot; Traefik &middot; Docker &middot; Let's Encrypt &middot; Cloudflare</span>
+</div>
 
-        function initDrops() {
-            drops = [];
-            dropSpeeds = [];
-            trailLengths = [];
-            chars = [];
-            
-            for (let i = 0; i < columns; i++) {
-                if (CONFIG.initialAnimation === 'fall') {
-                    drops[i] = Math.random() * -100;
-                } else if (CONFIG.initialAnimation === 'scatter') {
-                    drops[i] = Math.random() * height / CONFIG.fontSize;
-                } else {
-                    drops[i] = 0;
-                }
-                
-                const speedVariation = 1 + (Math.random() - 0.5) * CONFIG.dropSpeedVariation;
-                dropSpeeds[i] = CONFIG.dropSpeed * speedVariation;
-                
-                if (CONFIG.variableTrailLength) {
-                    trailLengths[i] = Math.floor(
-                        Math.random() * (CONFIG.maxTrailLength - CONFIG.minTrailLength) + CONFIG.minTrailLength
-                    );
-                } else {
-                    trailLengths[i] = CONFIG.maxTrailLength;
-                }
-                
-                chars[i] = [];
-                for (let j = 0; j < Math.ceil(height / CONFIG.fontSize) + CONFIG.maxTrailLength; j++) {
-                    chars[i][j] = getRandomChar();
-                }
-            }
-        }
+<div class="project-card">
+<h3>Workflow Automation (n8n)</h3>
+<p>Self-hosted n8n instance powering automated pipelines: LinkedIn job alert monitoring, AI-driven resume generation, Telegram notification bots, and Handshake job scanning with Playwright stealth browser automation.</p>
+<span class="tags">n8n &middot; Playwright &middot; Telegram API &middot; REST Webhooks</span>
+</div>
 
-        function getRandomChar() {
-            const charSet = CONFIG.characterSet === 'custom' && CONFIG.customCharacters
-                ? CONFIG.customCharacters
-                : CHARACTER_SETS[CONFIG.characterSet] || CHARACTER_SETS['full-ascii'];
-            
-            if (Math.random() < CONFIG.spaceFrequency) {
-                return ' ';
-            }
-            
-            return charSet[Math.floor(Math.random() * charSet.length)];
-        }
+<div class="project-card">
+<h3>AI Agent System (Genesis)</h3>
+<p>Autonomous AI agent framework designed for 24/7 operation on VPS. Architecture follows "bash governs, LLM earns" &mdash; a cron-based Governor orchestrates model-tiered agents (GPT-4 to Haiku) with structured config files for identity, memory, tools, and heartbeat monitoring.</p>
+<span class="tags">Bash &middot; Claude API &middot; OpenAI API &middot; Cron &middot; Docker</span>
+</div>
+</section>
 
-        function applyGlitch() {
-            if (!CONFIG.glitchEnabled) return;
-            
-            for (let i = 0; i < columns; i++) {
-                for (let j = 0; j < chars[i].length; j++) {
-                    if (Math.random() < CONFIG.glitchProbability) {
-                        chars[i][j] = getRandomChar();
-                    }
-                }
-            }
-        }
+<!-- ========== CONTACT ========== -->
+<section id="contact" class="card">
+<h2>Contact</h2>
+<p>Email: <a href="mailto:leontatwing@gmail.com">leontatwing@gmail.com</a></p>
+<p>GitHub: <a href="https://github.com/LeonWTW" target="_blank">github.com/LeonWTW</a></p>
+<p>LinkedIn: <a href="https://www.linkedin.com/in/leonwongwtw" target="_blank">linkedin.com/in/leonwongwtw</a></p>
+</section>
 
-        function getColor(x, y, distanceFromHead, trailLength) {
-            switch (CONFIG.colorMode) {
-                case 'gradient-trail':
-                    if (!CONFIG.gradientTrail) {
-                        return CONFIG.matrixColor;
-                    }
-                    const ratio = distanceFromHead / trailLength;
-                    const colorIndex = Math.floor(ratio * (CONFIG.trailColors.length - 1));
-                    return CONFIG.trailColors[Math.min(colorIndex, CONFIG.trailColors.length - 1)];
-                    
-                case 'rainbow':
-                    const rainbowHue = (hue + x * 10) % 360;
-                    return `hsl(${rainbowHue}, 100%, 50%)`;
-                    
-                case 'gradient':
-                    const gradientHue = (y / height) * 120;
-                    return `hsl(${gradientHue}, 100%, 50%)`;
-                    
-                case 'static':
-                default:
-                    return CONFIG.matrixColor;
-            }
-        }
+</main>
 
-        function drawMatrix() {
-            const fadeAlpha = CONFIG.fadeStyle === 'exponential' 
-                ? 1 - CONFIG.trailLength 
-                : 0.05;
-            
-            ctx.fillStyle = `rgba(0, 0, 0, ${fadeAlpha})`;
-            ctx.fillRect(0, 0, width, height);
+<footer>
+&copy; 2026 Leon Wong
+</footer>
 
-            if (CONFIG.glowEffect) {
-                ctx.shadowBlur = CONFIG.glowIntensity * 20;
-                ctx.shadowColor = CONFIG.matrixColor;
-            }
+<script>
+// ========================================
+// Matrix Rain (unchanged from original)
+// ========================================
+const CONFIG = {
+fontSize: 14,
+matrixSpeed: 10,
+characterSet: 'full-ascii',
+customCharacters: '',
+spaceFrequency: 0.1,
+colorMode: 'gradient-trail',
+matrixColor: '#00ff00',
+rainbowSpeed: 1,
+gradientTrail: true,
+trailColors: [
+'#ffffff',
+'#c7ffc7',
+'#8fff8f',
+'#57ff57',
+'#2fff2f',
+'#007f00'
+],
+highlightFirst: true,
+highlightColor: '#ffffff',
+trailLength: 0.5,
+fadeStyle: 'exponential',
+variableTrailLength: true,
+minTrailLength: 9,
+maxTrailLength: 50,
+glitchEnabled: true,
+glitchProbability: 0.01,
+dropSpeed: 1,
+dropSpeedVariation: 0.5,
+dropsPerColumn: 2,
+initialAnimation: 'fall',
+initialDelay: 100,
+characterFlip: true,
+flipProbability: 0.08,
+columnSpacing: 0.95,
+resetProbability: 0.03,
+targetFPS: 30,
+glowEffect: true,
+glowIntensity: 0.7,
+scanlineEffect: true,
+backgroundColor: '#000000',
+backgroundOpacity: 0.3
+};
 
-            ctx.font = `${CONFIG.fontSize}px monospace`;
+const CHARACTER_SETS = {
+'full-ascii': (() => {
+let chars = '';
+for (let i = 33; i <= 126; i++) chars += String.fromCharCode(i);
+return chars;
+})(),
+'hex': '0123456789ABCDEF',
+'numbers': '0123456789',
+'binary': '01',
+'letters-upper': 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+'letters-lower': 'abcdefghijklmnopqrstuvwxyz',
+'letters': 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
+'katakana': 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン',
+'symbols': '!@#$%^&*()_+-=[]{}|;:,.<>?',
+};
 
-            for (let i = 0; i < columns; i++) {
-                const x = i * CONFIG.fontSize * CONFIG.columnSpacing;
-                const trailLength = trailLengths[i];
-                
-                for (let t = 0; t < trailLength; t++) {
-                    const y = (drops[i] - t) * CONFIG.fontSize;
-                    
-                    if (y < 0 || y > height) continue;
-                    
-                    const charIndex = Math.floor((drops[i] - t + chars[i].length) % chars[i].length);
-                    let char = chars[i][charIndex] || getRandomChar();
-                    
-                    if (CONFIG.characterFlip && Math.random() < CONFIG.flipProbability) {
-                        char = getRandomChar();
-                        chars[i][charIndex] = char;
-                    }
-                    
-                    if (t === 0 && CONFIG.highlightFirst) {
-                        ctx.fillStyle = CONFIG.highlightColor;
-                        ctx.fillText(char, x, y);
-                    } else {
-                        ctx.fillStyle = getColor(i, y, t, trailLength);
-                        ctx.fillText(char, x, y);
-                    }
-                }
-                
-                drops[i] += dropSpeeds[i];
-                
-                if (drops[i] * CONFIG.fontSize > height && Math.random() > (1 - CONFIG.resetProbability)) {
-                    drops[i] = 0;
-                    
-                    if (CONFIG.variableTrailLength) {
-                        trailLengths[i] = Math.floor(
-                            Math.random() * (CONFIG.maxTrailLength - CONFIG.minTrailLength) + CONFIG.minTrailLength
-                        );
-                    }
-                }
-            }
+const canvas = document.getElementById('matrix-canvas');
+const ctx = canvas.getContext('2d');
+let width, height, columns;
+let drops = [];
+let dropSpeeds = [];
+let trailLengths = [];
+let chars = [];
+let hue = 0;
 
-            if (CONFIG.colorMode === 'rainbow') {
-                hue = (hue + CONFIG.rainbowSpeed) % 360;
-            }
+function resizeCanvas() {
+width = canvas.width = window.innerWidth;
+height = canvas.height = window.innerHeight;
+const adjustedFontSize = CONFIG.fontSize * CONFIG.columnSpacing;
+columns = Math.floor(width / adjustedFontSize);
+initDrops();
+}
 
-            if (CONFIG.glowEffect) {
-                ctx.shadowBlur = 0;
-            }
-            
-            applyGlitch();
-        }
+function initDrops() {
+drops = [];
+dropSpeeds = [];
+trailLengths = [];
+chars = [];
+for (let i = 0; i < columns; i++) {
+if (CONFIG.initialAnimation === 'fall') {
+drops[i] = Math.random() * -100;
+} else if (CONFIG.initialAnimation === 'scatter') {
+drops[i] = Math.random() * height / CONFIG.fontSize;
+} else {
+drops[i] = 0;
+}
+const speedVariation = 1 + (Math.random() - 0.5) * CONFIG.dropSpeedVariation;
+dropSpeeds[i] = CONFIG.dropSpeed * speedVariation;
+if (CONFIG.variableTrailLength) {
+trailLengths[i] = Math.floor(
+Math.random() * (CONFIG.maxTrailLength - CONFIG.minTrailLength) + CONFIG.minTrailLength
+);
+} else {
+trailLengths[i] = CONFIG.maxTrailLength;
+}
+chars[i] = [];
+for (let j = 0; j < Math.ceil(height / CONFIG.fontSize) + CONFIG.maxTrailLength; j++) {
+chars[i][j] = getRandomChar();
+}
+}
+}
 
-        function animate() {
-            drawMatrix();
-            setTimeout(() => {
-                requestAnimationFrame(animate);
-            }, 1000 / CONFIG.targetFPS);
-        }
+function getRandomChar() {
+const charSet = CONFIG.characterSet === 'custom' && CONFIG.customCharacters
+? CONFIG.customCharacters
+: CHARACTER_SETS[CONFIG.characterSet] || CHARACTER_SETS['full-ascii'];
+if (Math.random() < CONFIG.spaceFrequency) return ' ';
+return charSet[Math.floor(Math.random() * charSet.length)];
+}
 
-        setTimeout(() => {
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
-            animate();
-        }, CONFIG.initialDelay);
-    </script>
+function applyGlitch() {
+if (!CONFIG.glitchEnabled) return;
+for (let i = 0; i < columns; i++) {
+for (let j = 0; j < chars[i].length; j++) {
+if (Math.random() < CONFIG.glitchProbability) {
+chars[i][j] = getRandomChar();
+}
+}
+}
+}
+
+function getColor(x, y, distanceFromHead, trailLength) {
+switch (CONFIG.colorMode) {
+case 'gradient-trail':
+if (!CONFIG.gradientTrail) return CONFIG.matrixColor;
+const ratio = distanceFromHead / trailLength;
+const colorIndex = Math.floor(ratio * (CONFIG.trailColors.length - 1));
+return CONFIG.trailColors[Math.min(colorIndex, CONFIG.trailColors.length - 1)];
+case 'rainbow':
+const rainbowHue = (hue + x * 10) % 360;
+return `hsl(${rainbowHue}, 100%, 50%)`;
+case 'gradient':
+const gradientHue = (y / height) * 120;
+return `hsl(${gradientHue}, 100%, 50%)`;
+case 'static':
+default:
+return CONFIG.matrixColor;
+}
+}
+
+function drawMatrix() {
+const fadeAlpha = CONFIG.fadeStyle === 'exponential'
+? 1 - CONFIG.trailLength
+: 0.05;
+ctx.fillStyle = `rgba(0, 0, 0, ${fadeAlpha})`;
+ctx.fillRect(0, 0, width, height);
+if (CONFIG.glowEffect) {
+ctx.shadowBlur = CONFIG.glowIntensity * 20;
+ctx.shadowColor = CONFIG.matrixColor;
+}
+ctx.font = `${CONFIG.fontSize}px monospace`;
+for (let i = 0; i < columns; i++) {
+const x = i * CONFIG.fontSize * CONFIG.columnSpacing;
+const trailLength = trailLengths[i];
+for (let t = 0; t < trailLength; t++) {
+const y = (drops[i] - t) * CONFIG.fontSize;
+if (y < 0 || y > height) continue;
+const charIndex = Math.floor((drops[i] - t + chars[i].length) % chars[i].length);
+let char = chars[i][charIndex] || getRandomChar();
+if (CONFIG.characterFlip && Math.random() < CONFIG.flipProbability) {
+char = getRandomChar();
+chars[i][charIndex] = char;
+}
+if (t === 0 && CONFIG.highlightFirst) {
+ctx.fillStyle = CONFIG.highlightColor;
+ctx.fillText(char, x, y);
+} else {
+ctx.fillStyle = getColor(i, y, t, trailLength);
+ctx.fillText(char, x, y);
+}
+}
+drops[i] += dropSpeeds[i];
+if (drops[i] * CONFIG.fontSize > height && Math.random() > (1 - CONFIG.resetProbability)) {
+drops[i] = 0;
+if (CONFIG.variableTrailLength) {
+trailLengths[i] = Math.floor(
+Math.random() * (CONFIG.maxTrailLength - CONFIG.minTrailLength) + CONFIG.minTrailLength
+);
+}
+}
+}
+if (CONFIG.colorMode === 'rainbow') {
+hue = (hue + CONFIG.rainbowSpeed) % 360;
+}
+if (CONFIG.glowEffect) {
+ctx.shadowBlur = 0;
+}
+applyGlitch();
+}
+
+function animate() {
+drawMatrix();
+setTimeout(() => {
+requestAnimationFrame(animate);
+}, 1000 / CONFIG.targetFPS);
+}
+
+setTimeout(() => {
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+animate();
+}, CONFIG.initialDelay);
+</script>
 </body>
 </html>
